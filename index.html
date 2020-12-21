@@ -52,10 +52,9 @@
       var helper2 = new THREE.CameraHelper( camera2 );
 
       var camera3 = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 300);
-      camera3.position.x = 0;
-      camera3.position.y = 70;
+      camera3.position.x = 0.12;
+      camera3.position.y = 50;
       camera3.position.z = 0;
-      camera3.lookAt(figGroup.position);
       helper2.visible = false;
       scene.add(camera2);
       scene.add(camera3);
@@ -110,8 +109,7 @@
           camera2.fov = params.fov;
           camera2.updateProjectionMatrix();
           zoom = 40 / ( 2.0*Math.tan(0.5 * params.fov * Math.PI/180) );
-          helper2.visible = this.helper;
-          helper2.update(); //window.innerWidth
+
           
         }
 }
@@ -171,10 +169,11 @@
           }
         }
       }
-
+      var t = 0;
       function animate(){
-        camera3.lookAt(figGroup.position);
         camera2Group.lookAt(figGroup.position);
+ 
+        camera3.lookAt(figGroup.position.clone().setY(0));
         var dollyzoom = - zoom;
             camera2.position.x = dollyzoom;
             camera1Group.position.x = dollyzoom;
@@ -187,19 +186,21 @@
         else if(currentCam == 3 ){
           renderer.render(scene, camera3);
         }
-        requestAnimationFrame(animate);
 
+        t = (t+0.1)%(2*Math.PI);
+        requestAnimationFrame(animate);
+       
         
-        figGroup.translateZ(0.3*zDir);
-        figGroup.translateX(0.3*xDir);
+        figGroup.translateZ(0.1*zDir);
+        figGroup.translateX(0.1*xDir);
         if (pos == 1){
           if (zDir == 1 && figGroup.position.z >= 20){
             zDir = -1;
+            camera3.rotation.y += 2;
           }
-          if (zDir == -1 && figGroup.position.z <= 0){
+          if (zDir == -1 && figGroup.position.z <= -15){
             zDir = 1;
-            xDir = 1;
-            pos = 2;
+            xDir = 0;
           }
         }
         if (pos == 2){
